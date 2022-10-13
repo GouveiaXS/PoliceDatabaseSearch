@@ -86,7 +86,6 @@ CreateThread(function()
                         label = Config.Lang['access'],
                     },
                 },
-                job = terminal.job,
                 distance = 1.5 
             })
         end
@@ -120,63 +119,67 @@ CreateThread(function()
 end)
 
 RegisterNetEvent("angelicxs-policesearch:OpenTerminal", function()
-    local TerminalMenu1 = {}
-    local SearchOptions = nil
-    if Config.UseESX then
-        SearchOptions = Config.SearchOptionsESX
-    elseif Config.UseQBCore then
-        SearchOptions = Config.SearchOptionsQBCore
-    end
-    if Config.NHMenu then
-        table.insert(TerminalMenu1, {
-            header = Config.Lang['terminal_menu_header'],
-        })
-    elseif Config.QBMenu then
-        table.insert(TerminalMenu1, {
-                header = Config.Lang['terminal_menu_header'],
-                isMenuHeader = true
-            })
-    end
-    for _, Options in pairs(SearchOptions) do
-        local table = Options.tableid
-        local search = Options.searchid
-        local result = Options.resultid 
-        if Config.NHMenu then
-            TerminalMenu1[#TerminalMenu1+1] = {
-                header = Config.Lang['terminal_menu_option']..table,
-                context = Config.Lang['terminal_menu_search']..search..Config.Lang['terminal_menu_result']..result,
-                event = 'angelicxs-policesearch:InputTerminal',
-                args = { Options }
-            }
-        elseif Config.QBMenu then
-            TerminalMenu1[#TerminalMenu1+1] = {
-                header = Config.Lang['terminal_menu_option']..table,
-                txt = Config.Lang['terminal_menu_search']..search..Config.Lang['terminal_menu_result']..result,
-                params = {
-                    event = 'angelicxs-policesearch:InputTerminal',
-                    args = Options
-            }}
-        elseif Config.OXLib then
-            TerminalMenu1[#TerminalMenu1+1] = {
-                label = Config.Lang['terminal_menu_option']..table..' '..Config.Lang['terminal_menu_search']..search..Config.Lang['terminal_menu_result']..result,
-                args = { Options = Options}
-            }
+    if isLawEnforcement then
+        local TerminalMenu1 = {}
+        local SearchOptions = nil
+        if Config.UseESX then
+            SearchOptions = Config.SearchOptionsESX
+        elseif Config.UseQBCore then
+            SearchOptions = Config.SearchOptionsQBCore
         end
-    end
-    if Config.NHMenu then
-        TriggerEvent("nh-context:createMenu", TerminalMenu1)
-    elseif Config.QBMenu then
-        TriggerEvent("qb-menu:client:openMenu", TerminalMenu1)
-    elseif Config.OXLib then
-        lib.registerMenu({
-            id = 'policedatabaseterminal_ox',
-            title = Config.Lang['terminal_menu_header'],
-            options = TerminalMenu1,
-            position = 'top-right',
-        }, function(selected, scrollIndex, args)
-                TriggerEvent('angelicxs-policesearch:InputTerminal', args.Options)
-        end)
-        lib.showMenu('policedatabaseterminal_ox')
+        if Config.NHMenu then
+            table.insert(TerminalMenu1, {
+                header = Config.Lang['terminal_menu_header'],
+            })
+        elseif Config.QBMenu then
+            table.insert(TerminalMenu1, {
+                    header = Config.Lang['terminal_menu_header'],
+                    isMenuHeader = true
+                })
+        end
+        for _, Options in pairs(SearchOptions) do
+            local table = Options.tableid
+            local search = Options.searchid
+            local result = Options.resultid 
+            if Config.NHMenu then
+                TerminalMenu1[#TerminalMenu1+1] = {
+                    header = Config.Lang['terminal_menu_option']..table,
+                    context = Config.Lang['terminal_menu_search']..search..Config.Lang['terminal_menu_result']..result,
+                    event = 'angelicxs-policesearch:InputTerminal',
+                    args = { Options }
+                }
+            elseif Config.QBMenu then
+                TerminalMenu1[#TerminalMenu1+1] = {
+                    header = Config.Lang['terminal_menu_option']..table,
+                    txt = Config.Lang['terminal_menu_search']..search..Config.Lang['terminal_menu_result']..result,
+                    params = {
+                        event = 'angelicxs-policesearch:InputTerminal',
+                        args = Options
+                }}
+            elseif Config.OXLib then
+                TerminalMenu1[#TerminalMenu1+1] = {
+                    label = Config.Lang['terminal_menu_option']..table..' '..Config.Lang['terminal_menu_search']..search..Config.Lang['terminal_menu_result']..result,
+                    args = { Options = Options}
+                }
+            end
+        end
+        if Config.NHMenu then
+            TriggerEvent("nh-context:createMenu", TerminalMenu1)
+        elseif Config.QBMenu then
+            TriggerEvent("qb-menu:client:openMenu", TerminalMenu1)
+        elseif Config.OXLib then
+            lib.registerMenu({
+                id = 'policedatabaseterminal_ox',
+                title = Config.Lang['terminal_menu_header'],
+                options = TerminalMenu1,
+                position = 'top-right',
+            }, function(selected, scrollIndex, args)
+                    TriggerEvent('angelicxs-policesearch:InputTerminal', args.Options)
+            end)
+            lib.showMenu('policedatabaseterminal_ox')
+        end
+    else
+        TriggerEvent('angelicxs-policesearch:Notify', Config.Lang['not_leo'], Config.LangType['error'])
     end
 end)
 
@@ -217,7 +220,7 @@ RegisterNetEvent('angelicxs-policesearch:InputTerminal', function(options)
     TriggerServerEvent('angelicxs-policesearch:Server:SearchDatabase', options.tablename, options.searchcriteria, options.resultcriteria, criteria, options.tableset)
 end)
 
-RegisterNetEvent("angelicxs-policesearch:Client:DatabaseResult", function(table)
+RegisterNetEvent("angelicxs-policesearch:Client:DatabaseResult", function(table, criteria)
     local FinalResults = table
     local ReturnMenu = {}
     if FinalResults == nil then
@@ -225,11 +228,11 @@ RegisterNetEvent("angelicxs-policesearch:Client:DatabaseResult", function(table)
     else
         if Config.NHMenu then
             ReturnMenu[#ReturnMenu+1] = {
-                header = Config.Lang['database_results_title'],
+                header = Config.Lang['database_results_title']..criteria,
             }
         elseif Config.QBMenu then
             ReturnMenu[#ReturnMenu+1] = {
-                header = Config.Lang['database_results_title'],
+                header = Config.Lang['database_results_title']..criteria,
                 isMenuHeader = true
             }
         end
@@ -257,7 +260,7 @@ RegisterNetEvent("angelicxs-policesearch:Client:DatabaseResult", function(table)
         elseif Config.OXLib then
             lib.registerMenu({
                 id = 'databasemenu_ox',
-                title = Config.Lang['database_results_title'],
+                title = Config.Lang['database_results_title']..criteria,
                 options = ReturnMenu,
                 position = 'top-right',
             }, function(selected, scrollIndex, args)
