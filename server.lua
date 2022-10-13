@@ -38,6 +38,6 @@ RegisterNetEvent('angelicxs-policesearch:Server:SearchDatabase', function(table,
                 }
             end
         end
-        TriggerClientEvent('angelicxs-policesearch:Client:DatabaseResult', src, searchtable)
+        TriggerClientEvent('angelicxs-policesearch:Client:DatabaseResult', src, searchtable, criteria)
     end)
 end)
