@@ -29,7 +29,7 @@ Config.QBInput = true						-- Use QB-Input (Ignored if Config.NHInput = true) [h
 Config.QBMenu = true						-- Use QB-Menu (Ignored if Config.NHMenu = true) [https://github.com/qbcore-framework/qb-menu]
 Config.OXLib = false						-- Use the OX_lib (Ignored if Config.NHInput or Config.QBInput = true) [https://github.com/overextended/ox_lib]  !! must add shared_script '@ox_lib/init.lua' and lua54 'yes' to fxmanifest!!
 
-Config.LEOJobName = {'police', ' sheriff'}  -- Name(s) of police job(s)
+Config.LEOJobName = {'police', 'sheriff'}  -- Name(s) of police job(s)
 
 Config.TerminalLocations = {                -- Location of terminals and what LEOJobName is allowed to access it (specific access prevention disabled when Config.Use3DText = true)
     {location = vector3(447.53, -975.45, 30.69), job = 'police'},
@@ -89,12 +89,13 @@ Config.LangType = {
 Config.Lang = {
 	['3d_access'] = 'Press ~r~[E]~w~ to access Federal Database Terminal.',
 	['access'] = 'Access Federal Database Terminal.',
+    ['not_leo'] = 'Only law enforcement officers can access the database!',
     ['terminal_menu_header'] = 'Federal Database Terminal',
     ['terminal_menu_option'] = 'Access following database: ',
     ['terminal_menu_search'] = 'Search by: ',
     ['terminal_menu_result'] = ' to receive result of: ',
     ['no_results'] = 'Database Error: No matching results found.',
-    ['database_results_title'] = 'Database Compilation Results',
+    ['database_results_title'] = 'Database Compilation Results for: ',
     ['database_results_header'] = 'Database Result:',
 
 }
