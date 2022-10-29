@@ -13,8 +13,8 @@ Config.UseQBCore = true					-- Use QBCore Framework (Ignored if Config.UseESX = 
 
 Config.UseCustomNotify = false				-- Use a custom notification script, must complete event below.
 -- Only complete this event if Config.UseCustomNotify is true; mythic_notification provided as an example
-RegisterNetEvent('angelicxs-towimpound:CustomNotify')
-AddEventHandler('angelicxs-towimpound:CustomNotify', function(message, type)
+RegisterNetEvent('angelicxs-policesearch:CustomNotify')
+AddEventHandler('angelicxs-policesearch:CustomNotify', function(message, type)
     --exports.mythic_notify:SendAlert(type, message, 4000)
 end)
 
