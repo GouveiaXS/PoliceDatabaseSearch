@@ -1,6 +1,6 @@
 fx_version 'cerulean'
 game 'gta5'
-
+lua54 'yes' 
 author 'AngelicXS'
 version '1.0'
 
@@ -9,8 +9,11 @@ client_script {
 }
 
 server_script {
-	'server.lua',
+    'server.lua',
     '@mysql-async/lib/MySQL.lua'
 }
 
-shared_script 'config.lua'
+shared_scripts {
+   'config.lua',
+   '@ox_lib/init.lua',
+} 
